@@ -1,4 +1,4 @@
-resource "kubernetes_pod_disruption_budget" "main" {
+resource "kubernetes_pod_disruption_budget_v1" "main" {
   count = var.pdb_enabled ? 1 : 0
   metadata {
     name      = var.app_name
