@@ -11,7 +11,7 @@ Usage
 -----
 ```hcl
 module "app" {
-  source           = "./app"
+  source           = "app.terraform.io/rocket-arminek/app/k8s"
   app_name         = "your-app-name"
   namespace        = "your-namespace"
   app_docker_image = "your-docker-image"
