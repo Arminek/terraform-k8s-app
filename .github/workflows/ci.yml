@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
-          terraform fmt -check
+          terraform fmt --check --diff
 
   terraform_validation:
     runs-on: ubuntu-20.04
@@ -24,6 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
+          terraform init
           terraform validate
 
   test:
@@ -32,4 +33,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
+          terraform init
           terraform test
