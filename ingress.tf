@@ -3,7 +3,7 @@ resource "kubernetes_ingress_v1" "main" {
   count                  = var.ingress_enabled ? 1 : 0
   wait_for_load_balancer = var.wait_for_load_balancer
   metadata {
-    name      = var.app_name
+    name        = var.app_name
     namespace   = var.namespace
     annotations = var.ingress_annotations
   }
