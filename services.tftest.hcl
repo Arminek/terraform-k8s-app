@@ -1,7 +1,3 @@
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
 variables {
   ingress_enabled         = false
   service_enabled         = true
