@@ -11,7 +11,7 @@ variables {
   service_type            = "NodePort"
 }
 
-run "it deploys service for app in k8s" {
+run "it creates service for app in k8s" {
   command = plan
 
   assert {

@@ -10,7 +10,7 @@ variables {
   tls_hosts               = ["some-app.example.com", "*.example.com"]
 }
 
-run "it deploys ingress for app in k8s" {
+run "it creates ingress for app in k8s" {
   command = plan
 
   assert {
