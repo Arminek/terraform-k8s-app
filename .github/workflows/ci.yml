@@ -1,0 +1,22 @@
+name: k8s app
+
+on:
+  workflow_dispatch: ~
+  pull_request:
+    branches:
+      - "main"
+  push:
+    branches:
+      - "main"
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    name: "Terraform tests"
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          terraform init
+          terraform validate
+          terraform fmt --check
+          terraform test
