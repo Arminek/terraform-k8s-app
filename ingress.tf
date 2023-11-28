@@ -1,5 +1,5 @@
 resource "kubernetes_ingress_v1" "main" {
-  depends_on             = [kubernetes_service.main]
+  depends_on             = [kubernetes_deployment.main]
   count                  = var.ingress_enabled ? 1 : 0
   wait_for_load_balancer = var.wait_for_load_balancer
   metadata {
