@@ -228,3 +228,23 @@ variable "pdb_max_unavailable" {
   type    = string
   default = "50%"
 }
+
+variable "volume_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "volume_name" {
+  type    = string
+  default = ""
+}
+
+variable "persistent_volume_claim_name" {
+  type    = string
+  default = ""
+}
+
+variable "volume_mount_path" {
+  type    = string
+  default = ""
+}

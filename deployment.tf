@@ -28,8 +28,24 @@ resource "kubernetes_deployment" "main" {
       }
 
       spec {
+        dynamic "volume" {
+          for_each = var.volume_enabled == true ? [1] : []
+          content {
+            name = var.volume_name
+            persistent_volume_claim {
+              claim_name = var.persistent_volume_claim_name
+            }
+          }
+        }
         node_selector = var.node_selector
         container {
+          dynamic "volume_mount" {
+            for_each = var.volume_enabled == true ? [1] : []
+            content {
+              mount_path = var.volume_mount_path
+              name       = var.volume_name
+            }
+          }
           image_pull_policy = var.image_pull_policy
           image             = lower(var.app_docker_image)
           name              = var.app_name

@@ -1,11 +1,15 @@
 variables {
-  ingress_enabled         = false
-  service_enabled         = false
-  app_name                = "some-app"
-  namespace               = "some-namespace"
-  app_docker_image        = "busybox"
-  readiness_probe_enabled = false
-  liveness_probe_enabled  = false
+  ingress_enabled              = false
+  service_enabled              = false
+  app_name                     = "some-app"
+  namespace                    = "some-namespace"
+  app_docker_image             = "busybox"
+  readiness_probe_enabled      = false
+  liveness_probe_enabled       = false
+  volume_enabled               = true
+  volume_name                  = "some-volume"
+  volume_mount_path            = "/some/path"
+  persistent_volume_claim_name = "some-pvc"
   envs_from_value = [
     {
       name  = "SOME_ENV"
@@ -85,5 +89,25 @@ run "it creates deployment for app in k8s" {
     condition = kubernetes_deployment.main.spec[0].template[0].spec[0].container[0].env[2].value_from[0].config_map_key_ref[0].key == "config-key"
 
     error_message = "Deployment config env name is not correct"
+  }
+  assert {
+    condition = kubernetes_deployment.main.spec[0].template[0].spec[0].container[0].volume_mount[0].name == "some-volume"
+
+    error_message = "Deployment volume mount name is not correct"
+  }
+  assert {
+    condition = kubernetes_deployment.main.spec[0].template[0].spec[0].container[0].volume_mount[0].mount_path == "/some/path"
+
+    error_message = "Deployment volume mount path is not correct"
+  }
+  assert {
+    condition = kubernetes_deployment.main.spec[0].template[0].spec[0].volume[0].name == "some-volume"
+
+    error_message = "Deployment volume name is not correct"
+  }
+  assert {
+    condition = kubernetes_deployment.main.spec[0].template[0].spec[0].volume[0].persistent_volume_claim[0].claim_name == "some-pvc"
+
+    error_message = "Deployment volume claim name is not correct"
   }
 }
