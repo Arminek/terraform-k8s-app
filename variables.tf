@@ -248,3 +248,9 @@ variable "volume_mount_path" {
   type    = string
   default = ""
 }
+
+variable "runtime_class_name" {
+  description = "The name of the runtime class to use for the pod"
+  type        = string
+  default     = null
+}

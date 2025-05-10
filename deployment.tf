@@ -38,6 +38,7 @@ resource "kubernetes_deployment" "main" {
           }
         }
         node_selector = var.node_selector
+        runtime_class_name = var.runtime_class_name
         container {
           dynamic "volume_mount" {
             for_each = var.volume_enabled == true ? [1] : []
