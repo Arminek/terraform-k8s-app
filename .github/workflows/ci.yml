@@ -11,7 +11,7 @@ on:
 
 jobs:
   terraform_fmt:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: "Check terraform language style conventions"
     steps:
       - uses: actions/checkout@v3
@@ -19,7 +19,7 @@ jobs:
           terraform fmt --check --diff
 
   terraform_validation:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: "Validate terraform configuration"
     steps:
       - uses: actions/checkout@v3
@@ -28,7 +28,7 @@ jobs:
           terraform validate
 
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: "Tests terraform"
     steps:
       - uses: actions/checkout@v3
