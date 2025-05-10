@@ -47,6 +47,61 @@ module "app" {
   node_selector = {
     "purpose" = "workload"
   }
+  
+  # Multiple volume mounts example with different volume types
+  volumes = [
+    # PersistentVolumeClaim example
+    {
+      name       = "data-volume"
+      mount_path = "/data"
+      volume_source = {
+        type       = "persistent_volume_claim"
+        claim_name = "data-pvc"
+      }
+    },
+    # ConfigMap example
+    {
+      name       = "config-volume"
+      mount_path = "/config"
+      volume_source = {
+        type            = "config_map"
+        config_map_name = "app-config"
+        config_map_items = [
+          {
+            key  = "config.json"
+            path = "config.json"
+          },
+          {
+            key  = "settings.yaml"
+            path = "settings.yaml"
+          }
+        ]
+      }
+    },
+    # Secret example
+    {
+      name       = "secrets-volume"
+      mount_path = "/secrets"
+      volume_source = {
+        type        = "secret"
+        secret_name = "app-secrets"
+        secret_items = [
+          {
+            key  = "api-key"
+            path = "api-key"
+          }
+        ]
+      }
+    },
+    # EmptyDir example
+    {
+      name       = "temp-volume"
+      mount_path = "/tmp"
+      volume_source = {
+        type = "empty_dir"
+      }
+    }
+  ]
 }
 ```
 
@@ -283,4 +338,113 @@ variable "pdb_max_unavailable" {
   type    = string
   default = "50%"
 }
-```
+
+variable "volume_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "volumes" {
+  description = "List of volumes to mount with their configurations. Examples include:
+  
+  # PersistentVolumeClaim
+  {
+    name       = \"data-volume\"
+    mount_path = \"/data\"
+    volume_source = {
+      type       = \"persistent_volume_claim\"
+      claim_name = \"data-pvc\"
+    }
+  }
+  
+  # ConfigMap
+  {
+    name       = \"config-volume\"
+    mount_path = \"/config\"
+    volume_source = {
+      type            = \"config_map\"
+      config_map_name = \"app-config\"
+      config_map_items = [
+        {
+          key  = \"config.json\"
+          path = \"config.json\"
+        }
+      ]
+    }
+  }
+  
+  # Secret
+  {
+    name       = \"secrets-volume\"
+    mount_path = \"/secrets\"
+    volume_source = {
+      type        = \"secret\"
+      secret_name = \"app-secrets\"
+      secret_items = [
+        {
+          key  = \"api-key\"
+          path = \"api-key\"
+        }
+      ]
+    }
+  }
+  
+  # EmptyDir
+  {
+    name       = \"temp-volume\"
+    mount_path = \"/tmp\"
+    volume_source = {
+      type = \"empty_dir\"
+    }
+  }"
+  type = list(object({
+    name       = string
+    mount_path = string
+    volume_source = object({
+      type = string # Can be "persistent_volume_claim", "config_map", "secret", "empty_dir"
+      
+      # For persistent_volume_claim
+      claim_name = optional(string)
+      
+      # For config_map
+      config_map_name = optional(string)
+      config_map_items = optional(list(object({
+        key  = string
+        path = string
+      })), [])
+      
+      # For secret
+      secret_name = optional(string)
+      secret_items = optional(list(object({
+        key  = string
+        path = string
+      })), [])
+      
+      # For empty_dir
+      medium = optional(string, "")
+      size_limit = optional(string, "")
+    })
+  }))
+  default = []
+}
+
+variable "volume_name" {
+  type    = string
+  default = ""
+}
+
+variable "persistent_volume_claim_name" {
+  type    = string
+  default = ""
+}
+
+variable "volume_mount_path" {
+  type    = string
+  default = ""
+}
+
+variable "runtime_class_name" {
+  description = "The name of the runtime class to use for the pod"
+  type        = string
+  default     = null
+}

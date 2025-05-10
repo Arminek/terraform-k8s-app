@@ -234,6 +234,39 @@ variable "volume_enabled" {
   default = false
 }
 
+variable "volumes" {
+  description = "List of volumes to mount with their configurations"
+  type = list(object({
+    name       = string
+    mount_path = string
+    volume_source = object({
+      type = string # Can be "persistent_volume_claim", "config_map", "secret", "empty_dir"
+
+      # For persistent_volume_claim
+      claim_name = optional(string)
+
+      # For config_map
+      config_map_name = optional(string)
+      config_map_items = optional(list(object({
+        key  = string
+        path = string
+      })), [])
+
+      # For secret
+      secret_name = optional(string)
+      secret_items = optional(list(object({
+        key  = string
+        path = string
+      })), [])
+
+      # For empty_dir
+      medium     = optional(string, "")
+      size_limit = optional(string, "")
+    })
+  }))
+  default = []
+}
+
 variable "volume_name" {
   type    = string
   default = ""

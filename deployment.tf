@@ -37,6 +37,59 @@ resource "kubernetes_deployment" "main" {
             }
           }
         }
+
+        dynamic "volume" {
+          for_each = var.volumes
+          content {
+            name = volume.value.name
+
+            dynamic "persistent_volume_claim" {
+              for_each = volume.value.volume_source.type == "persistent_volume_claim" ? [1] : []
+              content {
+                claim_name = volume.value.volume_source.claim_name
+              }
+            }
+
+            dynamic "config_map" {
+              for_each = volume.value.volume_source.type == "config_map" ? [1] : []
+              content {
+                name = volume.value.volume_source.config_map_name
+
+                dynamic "items" {
+                  for_each = volume.value.volume_source.config_map_items
+                  content {
+                    key  = items.value.key
+                    path = items.value.path
+                  }
+                }
+              }
+            }
+
+            dynamic "secret" {
+              for_each = volume.value.volume_source.type == "secret" ? [1] : []
+              content {
+                secret_name = volume.value.volume_source.secret_name
+
+                dynamic "items" {
+                  for_each = volume.value.volume_source.secret_items
+                  content {
+                    key  = items.value.key
+                    path = items.value.path
+                  }
+                }
+              }
+            }
+
+            dynamic "empty_dir" {
+              for_each = volume.value.volume_source.type == "empty_dir" ? [1] : []
+              content {
+                medium     = volume.value.volume_source.medium != "" ? volume.value.volume_source.medium : null
+                size_limit = volume.value.volume_source.size_limit != "" ? volume.value.volume_source.size_limit : null
+              }
+            }
+          }
+        }
+
         node_selector      = var.node_selector
         runtime_class_name = var.runtime_class_name
         container {
@@ -47,6 +100,15 @@ resource "kubernetes_deployment" "main" {
               name       = var.volume_name
             }
           }
+
+          dynamic "volume_mount" {
+            for_each = var.volumes
+            content {
+              mount_path = volume_mount.value.mount_path
+              name       = volume_mount.value.name
+            }
+          }
+
           image_pull_policy = var.image_pull_policy
           image             = lower(var.app_docker_image)
           name              = var.app_name
