@@ -105,7 +105,7 @@ resource "kubernetes_deployment" "main" {
             for_each = var.volumes
             content {
               mount_path = volume_mount.value.mount_path
-              sub_path = volume_mount.value.sub_path
+              sub_path   = volume_mount.value.sub_path
               name       = volume_mount.value.name
             }
           }

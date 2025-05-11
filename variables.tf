@@ -239,7 +239,7 @@ variable "volumes" {
   type = list(object({
     name       = string
     mount_path = string
-    sub_path = optional(string)
+    sub_path   = optional(string)
     volume_source = object({
       type = string # Can be "persistent_volume_claim", "config_map", "secret", "empty_dir"
 
