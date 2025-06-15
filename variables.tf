@@ -284,3 +284,9 @@ variable "runtime_class_name" {
   type        = string
   default     = null
 }
+
+variable "command" {
+  description = "Command to run in the container. Overrides the default entrypoint of the container image"
+  type        = list(string)
+  default     = []
+}

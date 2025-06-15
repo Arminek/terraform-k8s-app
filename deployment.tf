@@ -113,6 +113,7 @@ resource "kubernetes_deployment" "main" {
           image_pull_policy = var.image_pull_policy
           image             = lower(var.app_docker_image)
           name              = var.app_name
+          command           = length(var.command) > 0 ? var.command : null
           dynamic "env" {
             for_each = var.envs_from_value
             content {

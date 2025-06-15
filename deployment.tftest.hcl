@@ -30,10 +30,29 @@ variables {
       config_key  = "config-key"
     }
   ]
+  command = ["./main", "some-arg", "some-other-arg"]
 }
 
 run "it_creates_deployment_for_app_in_k8s" {
   command = plan
+
+  assert {
+    condition = kubernetes_deployment.main.spec[0].template[0].spec[0].container[0].command[0] == "./main"
+
+    error_message = "Container command is not correct"
+  }
+
+  assert {
+    condition = kubernetes_deployment.main.spec[0].template[0].spec[0].container[0].command[1] == "some-arg"
+
+    error_message = "Container command is not correct"
+  }
+
+  assert {
+    condition = kubernetes_deployment.main.spec[0].template[0].spec[0].container[0].command[2] == "some-other-arg"
+
+    error_message = "Container command is not correct"
+  }
 
   assert {
     condition = kubernetes_deployment.main.metadata[0].name == "some-app"
